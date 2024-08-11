@@ -1,0 +1,162 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    landing page
+{% endblock %}
+
+{% block main %}
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+
+<!--Added additional style portion to make sure things fit exactly how we want them-->
+
+{% if bought %}
+    <div class="alert alert-info" role="alert" style='width:100%'>
+        Buy Successful!
+    </div>
+{% endif %}
+
+{% if sold %}
+    <div class="alert alert-info" role="alert" style='width:100%'>
+        Sell Successful!
+    </div>
+{% endif %}
+
+{% if register_successful %}
+    <div class="alert alert-info" role="alert" style='width:100%'>
+        Registration successful! Welcome, {{ username }}
+    </div>
+{% endif %}
+
+<style>
+    #border-add
+    {
+        margin-bottom: 5px;
+    }
+        #border-add2
+    {
+        margin-bottom: 5px;
+    }
+</style>
+
+<!-- Button trigger modal ADD -->
+<button type="button" id = "border-add" class="btn btn-success btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal">
+  Deposit Cash
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">How much cash would you like to add?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+        <form action="/" method="post">
+      <div class="modal-body form-group">
+        <div>
+            $ <input autocomplete="off" autofocus class="form-control" name="adder" placeholder="Amount to add" type="text">
+        </div>
+      </div>
+      <div class="modal-footer form-group">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+      </div>
+        </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- Button trigger modal SELL -->
+<button id = "border-add2" type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+  Withdrawal Cash
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel2" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title2" id="exampleModalLabel2">How much cash would you like to subtract?</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+        <form action="/" method="post">
+      <div class="modal-body form-group">
+        <div>
+            $ <input autocomplete="off" autofocus class="form-control" name="subtractor" placeholder="Amount to deduct" type="text">
+        </div>
+      </div>
+      <div class="modal-footer form-group">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button class="btn btn-primary" type="submit">Save Changes</button>
+      </div>
+        </form>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- button -->
+<!--<form action = "/" method = "POST" role = "form">-->
+<!--    <div class="btn-group form-group" >-->
+<!--      <button type="button" class="btn btn-primary form-control dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >-->
+<!--        Add / Subtract Cash Balance-->
+<!--      </button>-->
+<!--      <div class="dropdown-menu form-group" >-->
+        <!--KEY LINES BELOW, CHANGED A in Boot Strap to INPUT, also added form action, method = post etc.  Need to experiment more with what-->
+        <!--is neccessary and what is not-->
+<!--        <input class="dropdown-item text-success fw-bold form-control text-middle" name = "add" type="submit" value ="Add Cash" data-bs-toggle="modal"></input>-->
+<!--            <div class="dropdown-divider"></div>-->
+<!--        <input class="dropdown-item text-danger fw-bold form-control text-middle" name = "subtract" type="submit" value = "Subtract Cash" ></input>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--</form>-->
+<!-- button -->
+
+<style>
+    thead
+    {
+    border-top: hidden;
+    }
+</style>
+
+<table class="table tablestriped">
+  <thead>
+      <tr>
+          <th class = "text-start" >Symbol</th>
+          <th class = "text-start" >Name</th>
+          <th class = "text-end" >Shares</th>
+          <th class = "text-end" >Current Price</th>
+          <th class = "text-end" >TOTAL</th>
+      </tr>
+  </thead>
+  <tbody>
+  </tbody>
+<tfoot>
+            {% for row in q %}
+            <tr>
+                <td class = "text-start" > {{ row }} </td>
+                <td class = "text-start" > {{ lookup(row)["name"] }} </td>
+                <td class = "text-end" > {{ q[row] }} </td>
+                <td class = "text-end" > {{ usd(lookup(row)["price"]) }} </td>
+                <td class = "text-end" > {{ usd( lookup(row)["price"] * q[row] ) }} </td>
+            </tr>
+            {% endfor %}
+            <tr>
+                <td class='border-0 fw-bold text-end' colspan="4">Cash</td>
+                <td class="border-0 text-end"> {{ usd(user_cash) }} </td>
+            </tr>
+            <tr>
+                <td class="border-0 fw-bold text-end" colspan="4">TOTAL</td>
+                <td class="border-0 w-bold text-end"> {{ usd(user_cash + stock_cash) }}  </td>
+            </tr>
+        </tfoot>
+
+</table>
+
+{% endblock %}

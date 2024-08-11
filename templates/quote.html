@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Quote
+{% endblock %}
+
+{% block main %}
+
+{% if invalid %}
+        <div class="alert alert-info" role="alert">
+            Couldn't find symbol please try again
+        </div>
+{% endif %}
+
+<form action="/quote" method="post">
+    <input autocomplete="off" name="symbol" placeholder="Symbol" type="text">
+    <button type="submit">Get Quote</button>
+</form>
+
+
+{% endblock %}

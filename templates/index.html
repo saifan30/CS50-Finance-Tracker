@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Welcome to Finance</h1>
+
+        <!-- Display User Cash -->
+        <div class="user-info">
+            <h2>Cash Balance</h2>
+            <p>{{ user_cash | usd }}</p>
+        </div>
+
+        <!-- Display Transaction History -->
+        <h2>Transaction History</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Symbol</th>
+                    <th>Shares</th>
+                    <th>Price</th>
+                    <th>Time</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for trade in user_table %}
+                    <tr>
+                        <td>{{ trade.symbol }}</td>
+                        <td>{{ trade.shares }}</td>
+                        <td>{{ trade.price | usd }}</td>
+                        <td>{{ trade.time }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Display Total Stock Value -->
+        <div class="stock-value">
+            <h2>Total Stock Value</h2>
+            <p>{{ stock_cash | usd }}</p>
+        </div>
+
+        <!-- Add or Subtract Cash Form -->
+        <div class="cash-management">
+            <h2>Manage Cash</h2>
+            <form action="/" method="post">
+                <div>
+                    <label for="adder">Add Cash:</label>
+                    <input type="number" id="adder" name="adder" step="0.01" min="0">
+                    <button type="submit">Add</button>
+                </div>
+                <div>
+                    <label for="subtractor">Subtract Cash:</label>
+                    <input type="number" id="subtractor" name="subtractor" step="0.01" min="0">
+                    <button type="submit">Subtract</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Links to Other Pages -->
+        <div class="links">
+            <a href="/buy">Buy</a>
+            <a href="/sell">Sell</a>
+            <a href="/history">History</a>
+            <a href="/quote">Quote</a>
+            <a href="/logout">Logout</a>
+        </div>
+    </div>
+</body>
+</html>
